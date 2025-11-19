@@ -7,7 +7,7 @@ export function Header() {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <header className="border-b bg-card pb-4 mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <header className="border-b bg-card p-2 pb-4 rounded-lg mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
       <div className="flex items-center gap-2">
         <div className="p-2 bg-primary rounded-lg text-primary-foreground">
           <BookOpen className="h-6 w-6" />

@@ -1,0 +1,30 @@
+[
+  {
+    "id": "1",
+    "title": "Clean Code",
+    "author": "Robert C. Martin",
+    "year": 2008,
+    "addedAt": "2023-01-15T10:00:00Z"
+  },
+  {
+    "id": "2",
+    "title": "O Senhor dos Anéis",
+    "author": "J.R.R. Tolkien",
+    "year": 1954,
+    "addedAt": "2023-02-20T14:30:00Z"
+  },
+  {
+    "id": "3",
+    "title": "Entendendo Algoritmos",
+    "author": "Aditya Y. Bhargava",
+    "year": 2017,
+    "addedAt": "2023-03-05T09:15:00Z"
+  },
+  {
+    "id": "4",
+    "title": "O Programador Pragmático",
+    "author": "Andrew Hunt",
+    "year": 1999,
+    "addedAt": "2023-04-10T11:20:00Z"
+  }
+]

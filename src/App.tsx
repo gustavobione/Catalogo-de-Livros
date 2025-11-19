@@ -5,47 +5,52 @@ import { BookStats } from "@/components/BookStats";
 import { SearchBar } from "@/components/SearchBar";
 import { BookForm } from "@/components/BookForm";
 import { BookList } from "@/components/BookList";
-import { Toaster } from "@/components/ui/sonner";
+import { useTheme } from "@/context/ThemeContext";
+import { Toaster, toast } from "sonner";
 
 function App() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
 
-  // 1. Carregar dados (Simulando API com delay)
+  const { theme } = useTheme();
+
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
       try {
         const res = await fetch("/books.json");
-        if (!res.ok) throw new Error("Falha ao carregar");
+        if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
         const data = await res.json();
-        
-        // Pequeno delay artificial para mostrar o Skeleton (UX)
+
         setTimeout(() => {
           setBooks(data);
           setLoading(false);
-        }, 800); 
+        }, 800);
       } catch (error) {
-        console.error(error);
+        console.error("Erro ao buscar livros:", error);
         setLoading(false);
+        toast.error("Erro de conexão", {
+          description: "Não foi possível carregar a lista inicial de livros.",
+        });
       }
     };
     loadData();
   }, []);
 
-  // 2. Adicionar Livro
   const handleAddBook = (newBook: Omit<Book, "id">) => {
     const bookWithId = { ...newBook, id: crypto.randomUUID() };
     setBooks((prev) => [bookWithId, ...prev]);
   };
 
-  // 3. Remover Livro
   const handleRemoveBook = (id: string) => {
     setBooks((prev) => prev.filter((b) => b.id !== id));
+    toast.error("Livro removido", {
+      description: "O item foi excluído da lista.",
+      duration: 3000,
+    });
   };
 
-  // 4. Lógica de Filtro (Otimizada com useMemo)
   const filteredBooks = useMemo(() => {
     const lowerSearch = search.toLowerCase();
     return books.filter(
@@ -56,31 +61,34 @@ function App() {
   }, [books, search]);
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-sans transition-colors duration-300">
-      <div className="container max-w-4xl mx-auto py-8 px-4">
-        
-        {/* Cabeçalho e Tema */}
+    <div className="relative min-h-screen font-sans transition-colors duration-300 bg-background">
+      <div
+        className="fixed inset-0 z-0 opacity-20 pointer-events-none mix-blend-multiply dark:mix-blend-soft-light dark:opacity-100 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url('/background.jpg')` }}
+      />
+      <div className="fixed inset-0 z-0 pointer-events-none bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/10 via-background to-background" />
+      <div className="relative z-10 container max-w-4xl mx-auto py-8 px-4">
         <Header />
-
-        {/* Contadores */}
         <BookStats total={books.length} filtered={filteredBooks.length} />
 
-        {/* Busca e Formulário */}
         <div className="space-y-6">
           <SearchBar value={search} onChange={setSearch} />
-          
           <BookForm onAdd={handleAddBook} />
-          
-          <BookList 
-            books={filteredBooks} 
-            loading={loading} 
-            onRemove={handleRemoveBook} 
+
+          <BookList
+            books={filteredBooks}
+            loading={loading}
+            onRemove={handleRemoveBook}
           />
         </div>
       </div>
-      
-      {/* Componente de Notificações (Sonner) */}
-      <Toaster position="bottom-right" />
+
+      <Toaster
+        position="top-center"
+        richColors
+        closeButton
+        theme={theme as "light" | "dark"}
+      />
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import type { Book } from "@/types/types";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
+import { DeleteBookDialog } from "@/components/DeleteBookDialog";
 import {
   Table,
   TableBody,
@@ -9,8 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Trash2, BookX } from "lucide-react";
-import { toast } from "sonner";
+import { BookX } from "lucide-react";
 
 interface BookListProps {
   books: Book[];
@@ -19,10 +18,6 @@ interface BookListProps {
 }
 
 export function BookList({ books, loading, onRemove }: BookListProps) {
-  const handleRemove = (id: string) => {
-    onRemove(id);
-    toast.info("Livro removido.");
-  };
 
   // Estado de Carregamento (Skeleton)
   if (loading) {
@@ -72,16 +67,10 @@ export function BookList({ books, loading, onRemove }: BookListProps) {
               <TableCell>{book.author}</TableCell>
               <TableCell className="text-right">{book.year}</TableCell>
               <TableCell className="text-right">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 text-destructive hover:text-destructive/90"
-                  onClick={() => handleRemove(book.id)}
-                  title="Remover livro"
-                >
-                  <Trash2 className="h-4 w-4" />
-                  <span className="sr-only">Remover</span>
-                </Button>
+                <DeleteBookDialog 
+                    bookTitle={book.title}
+                    onConfirm={() => onRemove(book.id)}
+                />
               </TableCell>
             </TableRow>
           ))}
