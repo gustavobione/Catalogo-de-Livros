@@ -11,16 +11,11 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
-
-interface DeleteBookDialogProps {
-  bookTitle: string;
-  onConfirm: () => void;
-}
+import type { DeleteBookDialogProps } from "@/types/types";
 
 export function DeleteBookDialog({ bookTitle, onConfirm }: DeleteBookDialogProps) {
   return (
     <AlertDialog>
-      {/* O Trigger é o botão que o usuário clica na lista */}
       <AlertDialogTrigger asChild>
         <Button
           variant="ghost"
@@ -33,7 +28,6 @@ export function DeleteBookDialog({ bookTitle, onConfirm }: DeleteBookDialogProps
         </Button>
       </AlertDialogTrigger>
 
-      {/* O Conteúdo do Modal */}
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
@@ -45,7 +39,6 @@ export function DeleteBookDialog({ bookTitle, onConfirm }: DeleteBookDialogProps
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          {/* O botão de ação final usa a classe de bg-destructive (vermelho) */}
           <AlertDialogAction 
             onClick={onConfirm}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"

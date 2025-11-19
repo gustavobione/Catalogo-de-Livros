@@ -22,6 +22,9 @@ function App() {
         const res = await fetch("/books.json");
         if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
         const data = await res.json();
+        if (!Array.isArray(data)) {
+          throw new Error("Formato de dados inválido (esperado uma lista)");
+        }
 
         setTimeout(() => {
           setBooks(data);
@@ -63,8 +66,10 @@ function App() {
   return (
     <div className="relative min-h-screen font-sans transition-colors duration-300 bg-background">
       <div
-        className="fixed inset-0 z-0 opacity-20 pointer-events-none mix-blend-multiply dark:mix-blend-soft-light dark:opacity-100 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url('/background.jpg')` }}
+        className="fixed inset-0 z-0 opacity-20 dark:opacity-40 pointer-events-none mix-blend-multiply dark:mix-blend-soft-light bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: `url('/background.jpg')`,
+        }}
       />
       <div className="fixed inset-0 z-0 pointer-events-none bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/10 via-background to-background" />
       <div className="relative z-10 container max-w-4xl mx-auto py-8 px-4">
@@ -73,7 +78,7 @@ function App() {
 
         <div className="space-y-6">
           <SearchBar value={search} onChange={setSearch} />
-          <BookForm onAdd={handleAddBook} />
+          <BookForm onAdd={handleAddBook} existingBooks={books} />
 
           <BookList
             books={filteredBooks}

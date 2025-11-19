@@ -1,14 +1,9 @@
 import { useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
-
-interface SearchBarProps {
-  value: string;
-  onChange: (val: string) => void;
-}
+import type { SearchBarProps } from "@/types/types";
 
 export function SearchBar({ value, onChange }: SearchBarProps) {
-  // Requisito: useRef para foco automático
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {

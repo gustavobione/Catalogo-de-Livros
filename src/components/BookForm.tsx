@@ -3,50 +3,93 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PlusCircle } from "lucide-react";
+import { Plus, Sparkles } from "lucide-react";
 import { toast } from "sonner";
-import type { Book } from "@/types/types";
+import type { BookFormProps } from "@/types/types";
 
-interface BookFormProps {
-  onAdd: (book: Omit<Book, "id">) => void;
-}
-
-export function BookForm({ onAdd }: BookFormProps) {
+export function BookForm({ onAdd, existingBooks }: BookFormProps) {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [year, setYear] = useState("");
 
+
+  const formatAuthorName = (name: string) => {
+    return name
+      .split(" ") 
+      .map((word) => {
+        return word
+          .split(".")
+          .map((part) =>
+            part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()
+          )
+          .join("."); 
+      })
+      .join(" "); 
+  };
+
+  const normalizeText = (text: string) => {
+    return text
+      .normalize("NFD") 
+      .replace(/[\u0300-\u036f]/g, "") 
+      .toLowerCase(); 
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validação simples
+    // 1. Validação de campos vazios
     if (!title.trim() || !author.trim() || !year.trim()) {
-      toast.warning("Atenção", {
-        description: "Preencha todos os campos para adicionar um livro.",
+      toast.warning("Campos incompletos", {
+        description: "Por favor, preencha título, autor e ano para continuar.",
+      });
+      return;
+    }
+
+    const cleanTitle = title.trim();
+    const formattedAuthor = formatAuthorName(author.trim());
+    const yearNumber = parseInt(year);
+
+    // 2. Validação de Ano Negativo
+    if (yearNumber < 0) {
+      toast.warning("Ano inválido", {
+        description: "O ano de publicação não pode ser negativo.",
+      });
+      return;
+    }
+
+    // 3. Validação de Duplicidade (Título)
+    const isDuplicate = existingBooks.some(
+      (book) => normalizeText(book.title) === normalizeText(cleanTitle)
+    );
+
+    if (isDuplicate) {
+      toast.error("Livro duplicado", {
+        description: `O livro "${cleanTitle}" já está na sua lista (verifique acentos ou variações).`,
       });
       return;
     }
 
     onAdd({
-      title,
-      author,
-      year: parseInt(year),
+      title: cleanTitle,
+      author: formattedAuthor,
+      year: yearNumber,
     });
 
-    // Reset e Feedback
     setTitle("");
     setAuthor("");
     setYear("");
-    toast.success("Sucesso!", {
-      description: "Livro adicionado ao catálogo.",
+    
+    toast.success("Livro adicionado!", {
+      description: `${cleanTitle} já está na sua lista.`,
+      icon: <Sparkles className="h-4 w-4 text-green-500" />
     });
   };
 
   return (
     <Card className="mb-6">
-      <CardHeader>
+      <CardHeader className="pb-3">
         <CardTitle className="text-lg flex items-center gap-2">
-          <PlusCircle className="h-5 w-5" />
+          <Plus className="h-5 w-5 text-primary" />
           Adicionar Novo Livro
         </CardTitle>
       </CardHeader>
@@ -59,9 +102,10 @@ export function BookForm({ onAdd }: BookFormProps) {
               placeholder="Ex: O Hobbit" 
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              className="focus-visible:ring-primary"
             />
           </div>
-          <div className="sm:col-span-4 space-y-2">
+          <div className="sm:col-span-3 space-y-2">
             <Label htmlFor="author">Autor</Label>
             <Input 
               id="author" 
@@ -75,13 +119,14 @@ export function BookForm({ onAdd }: BookFormProps) {
             <Input 
               id="year" 
               type="number" 
+              min="0" 
               placeholder="1937" 
               value={year}
               onChange={(e) => setYear(e.target.value)}
             />
           </div>
-          <div className="sm:col-span-1">
-            <Button type="submit" className="w-full">Add</Button>
+          <div className="sm:col-span-2">
+            <Button type="submit" className="w-full font-semibold">Adicionar Livro</Button>
           </div>
         </form>
       </CardContent>

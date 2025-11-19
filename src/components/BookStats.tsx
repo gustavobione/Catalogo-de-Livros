@@ -1,10 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Library, Filter } from "lucide-react";
-
-interface BookStatsProps {
-  total: number;
-  filtered: number;
-}
+import type { BookStatsProps } from "@/types/types";
 
 export function BookStats({ total, filtered }: BookStatsProps) {
   return (
