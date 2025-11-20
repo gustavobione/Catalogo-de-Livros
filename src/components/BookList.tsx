@@ -11,7 +11,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { BookX, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import { DeleteBookDialog } from "./DeleteBookDialog";
-// Importando tipos centralizados
 import type { BookListProps, SortConfig } from "@/types/types";
 
 export function BookList({ books, loading, onRemove }: BookListProps) {

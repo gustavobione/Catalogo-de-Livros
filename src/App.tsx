@@ -6,10 +6,11 @@ import { SearchBar } from "@/components/SearchBar";
 import { BookForm } from "@/components/BookForm";
 import { BookList } from "@/components/BookList";
 import { useTheme } from "@/context/ThemeContext";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { Toaster, toast } from "sonner";
 
 function App() {
-  const [books, setBooks] = useState<Book[]>([]);
+  const [books, setBooks] = useLocalStorage<Book[]>("my-library-books", []);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
 
@@ -18,10 +19,18 @@ function App() {
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
+      // Se já temos livros salvos, não precisamos carregar o mock inicial.
+      if (books.length > 0) {
+        setLoading(false);
+        return; 
+      }
+      // Caso contrário (primeira visita ou lista vazia), carregamos o mock inicial.
       try {
         const res = await fetch("/books.json");
         if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
+        
         const data = await res.json();
+
         if (!Array.isArray(data)) {
           throw new Error("Formato de dados inválido (esperado uma lista)");
         }
@@ -38,6 +47,7 @@ function App() {
         });
       }
     };
+    
     loadData();
   }, []);
 

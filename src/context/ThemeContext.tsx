@@ -13,7 +13,6 @@ const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useLocalStorage<Theme>("app-theme", "light");
 
-  // Atualiza a classe 'dark' no elemento HTML raiz
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.remove("light", "dark");

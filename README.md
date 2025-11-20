@@ -52,19 +52,23 @@ Para garantir um código limpo, escalável e de fácil manutenção, tomei as se
 
 **Onde foi aplicado?**
 
-O hook useLocalStorage foi aplicado no arquivo src/context/ThemeContext.tsx.
+O hook useLocalStorage foi aplicado em dois pontos críticos da aplicação:
+
+1. ``src/context/ThemeContext.tsx``: Para salvar a preferência de tema (Claro/Escuro).
+
+2. ``src/App.tsx``: Para persistir a lista de livros adicionados e removidos pelo usuário.
 
 **Por que foi utilizado?**
 
-A persistência de dados é crucial para a experiência do usuário. Sem ela, toda vez que o usuário recarregasse a página, o tema voltaria para o padrão (Claro).
+A persistência de dados é fundamental para que o usuário não perca seu trabalho ao atualizar a página (F5).
 
 **Criei este hook para:**
 
-**1. Abstrair a complexidade:** Ele encapsula a lógica de verificar se o window existe, ler do localStorage, fazer o parsing do JSON e tratar erros de leitura/escrita.
+**1. Abstrair a complexidade:** Ele encapsula a lógica de verificar se o ``window`` existe, ler do ``localStorage``, fazer o parsing do JSON e tratar erros de leitura/escrita.
 
-**2. Reutilização:** Embora usado aqui para o Tema (Dark/Light), ele é genérico e pode ser usado futuramente para persistir outros dados (como o termo de busca ou filtros) sem reescrever código.
+**2. Sincronização Automática:** Ele combina ``useState`` com ``useEffect``. Assim que o estado da aplicação muda (ex: adicionou um livro), o hook automaticamente atualiza o navegador, mantendo UI e Storage sempre sincronizados sem código repetitivo.
 
-**3. Sincronização:** Ele mantém o Estado do React (useState) sincronizado automaticamente com o armazenamento do navegador (useEffect), garantindo que a UI reflita sempre o dado persistido.
+**3. Lógica de "Seed":** No ``App.tsx``, usamos o hook para verificar: "Já existem dados do usuário? Se sim, use-os. Se não, carregue o JSON inicial".
 
 ## 🎨 Tecnologias Utilizadas
 
