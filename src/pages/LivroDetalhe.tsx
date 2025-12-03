@@ -18,7 +18,7 @@ import { BookNotFound } from "@/components/BookNotFound";
 const AVAILABLE_GENRES = [
     "Ficção", "Fantasia", "Romance", "Terror", "Técnico",
     "História", "Sci-Fi", "Biografia", "Autoajuda", "Mistério",
-    "Clássico", "HQ/Mangá", "Negócios"
+    "Clássico", "HQ/Mangá", "Negócios", "Não-ficção"
 ];
 
 export function LivroDetalhe() {
