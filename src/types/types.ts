@@ -1,9 +1,17 @@
 // Entidade Principal
+export type BookStatus = 'ler_depois' | 'lendo' | 'lido';
+
 export interface Book {
   id: string;
   title: string;
   author: string;
   year: number;
+  genres?: string[];
+  cover?: string;
+  rating?: number;
+  status?: BookStatus;
+  notes?: string;
+  isFavorite?: boolean;
   addedAt?: string;
 }
 

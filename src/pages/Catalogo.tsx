@@ -1,9 +1,9 @@
 import { useState, useEffect, useMemo } from "react";
 import type { Book } from "@/types/types";
-import { BookStats } from "@/components/BookStats";
-import { SearchBar } from "@/components/SearchBar";
-import { BookForm } from "@/components/BookForm";
-import { BookList } from "@/components/BookList";
+import { BookStats } from "@/components/catalogo/BookStats";
+import { SearchBar } from "@/components/catalogo/SearchBar";
+import { BookForm } from "@/components/catalogo/BookForm";
+import { BookList } from "@/components/catalogo/BookList";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { toast } from "sonner";
 

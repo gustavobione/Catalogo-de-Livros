@@ -3,7 +3,7 @@ import { useTheme } from "@/context/ThemeContext";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { BookOpen, Moon, Sun } from "lucide-react";
-import { Link, useLocation } from "react-router-dom"; // IMPORTANTE
+import { Link, useLocation } from "react-router-dom";
 
 export function Header() {
   const { theme, toggleTheme } = useTheme();
@@ -22,11 +22,9 @@ export function Header() {
             <BookOpen className="h-6 w-6" />
           </div>
           <div>
-            <h1 className="text-xl font-bold tracking-tight">Catálogo</h1>
+            <h1 className="text-xl font-bold tracking-tight">MyLib</h1>
           </div>
         </Link>
-
-        {/* MENU DE NAVEGAÇÃO OBRIGATÓRIO */}
         <nav className="flex gap-4 text-sm">
           <Link to="/" className={linkStyle("/")}>Home</Link>
           <Link to="/catalogo" className={linkStyle("/catalogo")}>Livros</Link>
