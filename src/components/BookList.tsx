@@ -9,9 +9,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { BookX, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { BookX, ArrowUpDown, ArrowUp, ArrowDown, Eye } from "lucide-react";
 import { DeleteBookDialog } from "./DeleteBookDialog";
 import type { BookListProps, SortConfig } from "@/types/types";
+import { Link } from "react-router-dom";
 
 export function BookList({ books, loading, onRemove }: BookListProps) {
   const [sortConfig, setSortConfig] = useState<SortConfig>(null);
@@ -64,14 +65,14 @@ export function BookList({ books, loading, onRemove }: BookListProps) {
     return (
       <div className="rounded-md border bg-card/80 backdrop-blur-sm p-4 space-y-4">
         <div className="flex justify-between items-center mb-4 px-2">
-            <Skeleton className="h-6 w-[150px]" />
-            <Skeleton className="h-6 w-[100px]" />
-            <Skeleton className="h-6 w-[50px]" />
+          <Skeleton className="h-6 w-[150px]" />
+          <Skeleton className="h-6 w-[100px]" />
+          <Skeleton className="h-6 w-[50px]" />
         </div>
         <div className="space-y-2">
-            {[1, 2, 3, 4].map((i) => (
+          {[1, 2, 3, 4].map((i) => (
             <Skeleton key={i} className="h-14 w-full rounded-lg" />
-            ))}
+          ))}
         </div>
       </div>
     );
@@ -81,7 +82,7 @@ export function BookList({ books, loading, onRemove }: BookListProps) {
     return (
       <div className="flex flex-col items-center justify-center py-16 border rounded-lg border-dashed bg-card/60 backdrop-blur-md">
         <div className="p-4 bg-background/50 rounded-full mb-4">
-            <BookX className="h-8 w-8 text-muted-foreground" />
+          <BookX className="h-8 w-8 text-muted-foreground" />
         </div>
         <h3 className="text-lg font-medium mb-1">Nenhum livro encontrado</h3>
         <p className="text-sm text-muted-foreground max-w-sm text-center">
@@ -97,8 +98,8 @@ export function BookList({ books, loading, onRemove }: BookListProps) {
         <TableHeader className="bg-muted/50">
           <TableRow>
             <TableHead className="pl-4 w-[45%]">
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 onClick={() => handleSort("title")}
                 className="-ml-4 hover:bg-transparent hover:text-primary font-semibold"
               >
@@ -107,8 +108,8 @@ export function BookList({ books, loading, onRemove }: BookListProps) {
               </Button>
             </TableHead>
             <TableHead className="w-[30%]">
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 onClick={() => handleSort("author")}
                 className="-ml-4 hover:bg-transparent hover:text-primary font-semibold"
               >
@@ -117,8 +118,8 @@ export function BookList({ books, loading, onRemove }: BookListProps) {
               </Button>
             </TableHead>
             <TableHead className="text-center">
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 onClick={() => handleSort("year")}
                 className="-ml-4 hover:bg-transparent hover:text-primary font-semibold ml-auto"
               >
@@ -142,9 +143,16 @@ export function BookList({ books, loading, onRemove }: BookListProps) {
                 {book.year}
               </TableCell>
               <TableCell className="pr-4 text-right">
-                <DeleteBookDialog 
-                    bookTitle={book.title}
-                    onConfirm={() => onRemove(book.id)}
+                <Link
+                  to={`/catalogo/${book.id}`}
+                  className="h-8 w-8 inline-flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-primary transition-colors"
+                  title="Ver detalhes"
+                >
+                  <Eye className="h-4 w-4" />
+                </Link>
+                <DeleteBookDialog
+                  bookTitle={book.title}
+                  onConfirm={() => onRemove(book.id)}
                 />
               </TableCell>
             </TableRow>
