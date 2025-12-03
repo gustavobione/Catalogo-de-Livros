@@ -20,6 +20,7 @@ export interface Book {
 export interface BookStatsProps {
   total: number;
   filtered: number;
+  favorites: number;
 }
 
 export interface SearchBarProps {

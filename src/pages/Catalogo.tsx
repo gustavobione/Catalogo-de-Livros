@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import type { Book } from "@/types/types";
+import type { Book, BookStatus } from "@/types/types"; // Importe BookStatus se tiver definido, ou use string
 import { BookStats } from "@/components/catalogo/BookStats";
 import { SearchBar } from "@/components/catalogo/SearchBar";
 import { BookForm } from "@/components/catalogo/BookForm";
@@ -8,7 +8,7 @@ import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { toast } from "sonner";
 
 export function Catalogo() {
-    // Lógica movida do antigo App.tsx
+    // --- LÓGICA DA VERSÃO 1.0 MANTIDA ---
     const [books, setBooks] = useLocalStorage<Book[]>("my-library-books", []);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState("");
@@ -37,18 +37,31 @@ export function Catalogo() {
             }
         };
         loadData();
-    }, []); // Array vazio para rodar apenas uma vez
+    }, []); 
 
+    // --- HANDLERS ---
     const handleAddBook = (newBook: Omit<Book, "id">) => {
         const bookWithId = { ...newBook, id: crypto.randomUUID() };
         setBooks((prev) => [bookWithId, ...prev]);
+        toast.success("Livro adicionado com sucesso!");
     };
 
     const handleRemoveBook = (id: string) => {
         setBooks((prev) => prev.filter((b) => b.id !== id));
-        toast.error(`Livro ${books.find((b) => b.id === id)?.title} removido`);
+        toast.error("Livro removido.");
     };
 
+    // --- NOVOS HANDLERS (Lógica adicionada) ---
+    const handleUpdateStatus = (id: string, newStatus: BookStatus) => {
+        setBooks((prev) => prev.map(b => b.id === id ? { ...b, status: newStatus } : b));
+        toast.success("Status atualizado!");
+    };
+
+    const handleToggleFavorite = (id: string) => {
+        setBooks((prev) => prev.map(b => b.id === id ? { ...b, isFavorite: !b.isFavorite } : b));
+    };
+
+    // --- CÁLCULOS ---
     const filteredBooks = useMemo(() => {
         const lowerSearch = search.toLowerCase();
         return books.filter(
@@ -58,16 +71,36 @@ export function Catalogo() {
         );
     }, [books, search]);
 
+    const totalFavorites = books.filter(b => b.isFavorite).length;
+
     return (
-        <div className="space-y-6">
-            <BookStats total={books.length} filtered={filteredBooks.length} />
+        <div className="space-y-6 animate-in fade-in duration-500 pb-20">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h1 className="text-3xl font-bold tracking-tight">Minha Biblioteca</h1>
+                    <p className="text-muted-foreground">Gerencie suas leituras e descobertas.</p>
+                </div>
+            </div>
+
+            <BookStats 
+                total={books.length} 
+                filtered={filteredBooks.length} 
+                favorites={totalFavorites}
+            />
+
             <div className="space-y-6">
                 <SearchBar value={search} onChange={setSearch} />
+                
+                {/* BookForm Mantido */}
                 <BookForm onAdd={handleAddBook} existingBooks={books} />
+                
+                {/* BookList Atualizado com novas props */}
                 <BookList
                     books={filteredBooks}
                     loading={loading}
                     onRemove={handleRemoveBook}
+                    onUpdateStatus={handleUpdateStatus}   // Nova prop
+                    onToggleFavorite={handleToggleFavorite} // Nova prop
                 />
             </div>
         </div>
