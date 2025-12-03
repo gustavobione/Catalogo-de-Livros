@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { BookX, ArrowUpDown, ArrowUp, ArrowDown, Eye } from "lucide-react";
-import { DeleteBookDialog } from "./DeleteBookDialog";
+import { DeleteBookDialog } from "../DeleteBookDialog";
 import type { BookListProps, SortConfig } from "@/types/types";
 import { Link } from "react-router-dom";
 
